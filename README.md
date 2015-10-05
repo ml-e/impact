@@ -1,6 +1,9 @@
 ---
+title: "Targeting on Impact"
 output: pdf_document
+bibliography: bibliography.bib
 ---
+
 This project investigates the use of machine learning techniques to estimate heterogeneous treatment effects.
 For now we study the Mexican PROGRESA program but we hope to include evaluations of other randomized controlled trials as well.
 Information about PROGRESA is included in this document for now but it will be split out when more RCTs are added to the repository.
@@ -17,7 +20,7 @@ By targeting an intervention to the individuals most likely to benefit from it, 
 
 ## Heterogenous Treatment Effects
 
-This framework follows [1].
+This section follows [@athey2015machine].
 Suppose we have $N$ individuals.
 We are interested in the effect of an intervention $W$ on an outcome $Y$ given an individual's attributes $X$.
 For a particular individual $i$, we define the following quantities:
@@ -143,7 +146,7 @@ This measure is useful to us in deciding between algorithms, but it does not tel
 
 ## Welfare estimation
 
-Bhattacharya and Dupas give a method for estimating welfare gains of a targeting strategy.
+[@bhattacharya2012inferring] gives a method for estimating welfare gains of a targeting strategy.
 Let
 $$
 t_w(x) = E[Y_w \mid X=x]
@@ -183,6 +186,6 @@ Where $\bar L$ is the CDF of a chosen kernel and $h_N \to 0$ as $N \to \infty$ i
 
 
 # Data
-Progresa
+Progresa [@schultz2004school]
 
 

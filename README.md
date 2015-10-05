@@ -1,3 +1,6 @@
+---
+output: pdf_document
+---
 This project investigates the use of machine learning techniques to estimate heterogeneous treatment effects.
 For now we study the Mexican PROGRESA program but we hope to include evaluations of other randomized controlled trials as well.
 Information about PROGRESA is included in this document for now but it will be split out when more RCTs are added to the repository.
@@ -40,11 +43,11 @@ We can think of $E[t_i \mid X_i=x]$ as a supervised machine learning problem, wi
 The typical prblem with data of this kind is the selection problem.
 
 $$
-\begin{align}
+\begin{aligned}
 E[Y_i \mid X_i=x, W_i=1] - E[Y_i \mid X_i=x, W_i=0]  & = (E[Y_i(1) - Y_i(0) \mid X_i=x, W_i=1]) \\
 & + (E[Y_i(1) \mid X_i=x, W_i=1] - E[Y_i(0) \mid X_i=x, w_i=0]) \\
 & \neq E[Y_i(1) - Y_i(0) \mid X_i=x]
-\end{align}
+\end{aligned}
 $$
 
 If we have RCT data, $W_i$ is independent of $Y_i(1), Y_i(0)$ and the latter term is zero.
@@ -57,10 +60,10 @@ I describe their proposals below.
 The most straightforward approach is to directly approximate the conditional expectation of the outcome given the covariates and the treatment variable.
 
 $$
-\begin{align}
+\begin{aligned}
 f(x, w) & = \hat E [Y_i \mid X_i=x, W_i=w] \\
 t(x) & \approx f(x, 1) - f(x, 0)
-\end{align}
+\end{aligned}
 $$
 
 ### Two models
@@ -68,11 +71,11 @@ $$
 We can also create separate models for the outcome with and without treatment.
 
 $$
-\begin{align}
+\begin{aligned}
 f_1(x) & = \hat E [Y_i \mid X_i=x, W_i=1] \\
 f_0(x) & = \hat E [Y_i \mid X_i=x, W_i=0] \\
 t(x) & \approx f_1(x) - f_0(x)
-\end{align}
+\end{aligned}
 $$
 
 The difference between a single model and two models depends on the class of functions used in the approximation.
@@ -94,12 +97,12 @@ $$
 
 Proof (dropping the conditioning on X_i for notational simplicity):
 $$
-\begin{align}
+\begin{aligned}
 E[Y_i * (W_i - p) / (p * (1 - p)] & = E[E[Y_i * (W_i - p) / (p * (1 - p)] \mid W_i] \\
 & = p * E[Y_i * (W_i - p) / (p * (1 - p)) \mid W_i=1] + (1 - p)  * E[Y_i * (W_i - p) / (p * (1 - p) \mid W_i=0] \\
 & = E[Y_i(1) \mid W_i=1] - E[Y_i(0) \mid W_i=0] \\
 & = E[Y_i(1)] - E[Y_i(0)]
-\end{align}
+\end{aligned}
 $$
 Note that this relies on the independence assumption.
 Define
@@ -141,9 +144,45 @@ This measure is useful to us in deciding between algorithms, but it does not tel
 ## Welfare estimation
 
 Bhattacharya and Dupas give a method for estimating welfare gains of a targeting strategy.
+Let
+$$
+t_w(x) = E[Y_w \mid X=x]
+$$
+
+So
+$$
+t(x) = t_1(x) - t_0(x)
+$$
+Suppose $\hat t (x)$ is an unbiased estimator for $t(x)$.
+Assume we have estimators for $t_0(x)$ and  $t_1(x)$
+Consider the targeting strategy 
+$$
+W(x) = 1 \{ \hat t (x) > \gamma \}
+$$
+where $W(x)$ is the probability of assigning an individual with observed attributes $x$ to the treatment.
+In practice $\gamma$ will also be estimated from the data.
+
+This strategy has expected welfare
+$$
+\begin{aligned}
+\rho_N = \int_{\mathcal{X}} & t_1(x) \, \mathrm{Pr} \{ \hat t (x) > \gamma \}  \\
+ + & t_0(x) \, \mathrm{Pr} \{ \hat t (x) < \gamma \} \, dF(x)
+\end{aligned}
+$$
+Where $F(x)$ is the distribution function for $x$.
+
+Bhattacharya and Dupas show that the following is a valid estimator for $\rho_N$ 
+$$
+\hat \rho = \frac {1} {N} \sum_i \left [ 
+    \hat t_1(X_i) - \hat t(X_i) \, \bar L \left (
+        \frac {\hat \gamma  - \hat t(X_i)} {h_N}
+    \right )
+\right ]
+$$
+Where $\bar L$ is the CDF of a chosen kernel and $h_N \to 0$ as $N \to \infty$ is a bandwidth parameter.
+
 
 # Data
 Progresa
 
 
-Dupas
